@@ -23,6 +23,22 @@ const Cart = () => {
     onRemove,
   } = useStateContext();
 
+  const handleCheckout = async () => {
+    const response = await fetch("/api/xendit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        body: JSON.stringify(cartItems),
+      },
+    });
+
+    if (response.statusCode === 500) return;
+
+    const data = await response.json();
+    console.log(data);
+    toast.loading("Redirecting...");
+  };
+
   return (
     <div className="cart-wrapper" ref={cartRef}>
       <div className="cart-container">
@@ -107,7 +123,7 @@ const Cart = () => {
               <h3>${totalPrice}</h3>
             </div>
             <div className="btn-container">
-              <button type="button" className="btn" onClick="">
+              <button type="button" className="btn" onClick={handleCheckout}>
                 Pay with Stripe
               </button>
             </div>
